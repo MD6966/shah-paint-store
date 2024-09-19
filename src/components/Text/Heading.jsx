@@ -14,6 +14,7 @@ const Heading = ({ children }) => {
       <Typography
         sx={{
           textAlign: "center",
+          mb: 1,
         }}
         variant="h3"
       >

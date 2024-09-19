@@ -1,10 +1,18 @@
 import React, { useState } from "react";
-import { Card, CardMedia, Box, Avatar, Typography } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  Box,
+  Avatar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { FaRegHeart } from "react-icons/fa";
 import { CiShare1 } from "react-icons/ci";
 
 const ProductCard = ({ val }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const isMobile = useMediaQuery("(max-width:600px)"); // Set mobile screen threshold
 
   return (
     <Box>
@@ -27,7 +35,7 @@ const ProductCard = ({ val }) => {
               objectFit: "contain",
               width: "100%",
               transition: "transform 0.3s ease-in-out",
-              transform: isHovered ? "scale(1.1)" : "scale(1)",
+              transform: isHovered && !isMobile ? "scale(1.1)" : "scale(1)",
             }}
             image={val.src}
             alt="product image"
@@ -40,8 +48,9 @@ const ProductCard = ({ val }) => {
               display: "flex",
               flexDirection: "column",
               gap: 1,
-              opacity: isHovered ? 1 : 0,
-              transform: isHovered ? "translateX(0)" : "translateX(100%)",
+              opacity: isHovered || isMobile ? 1 : 0,
+              transform:
+                isHovered || isMobile ? "translateX(0)" : "translateX(100%)",
               transition: "opacity 0.3s ease, transform 0.3s ease",
             }}
           >
@@ -73,19 +82,21 @@ const ProductCard = ({ val }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: isHovered
-              ? "linear-gradient(to right, #af1975, violet)"
-              : "transparent",
+            background:
+              isHovered || isMobile
+                ? "linear-gradient(to right, #af1975, violet)"
+                : "transparent",
             transition: "background 0.3s ease",
-            opacity: isHovered ? 1 : 0,
-            transform: isHovered ? "translateY(0)" : "translateY(20px)",
+            opacity: isHovered || isMobile ? 1 : 0,
+            transform:
+              isHovered || isMobile ? "translateY(0)" : "translateY(20px)",
             transition:
               "background 0.3s ease, opacity 0.3s ease, transform 0.3s ease",
           }}
         >
           <Typography
             sx={{
-              color: isHovered ? "#fff" : "transparent",
+              color: isHovered || isMobile ? "#fff" : "transparent",
               transition: "color 0.3s ease",
             }}
           >
@@ -100,7 +111,7 @@ const ProductCard = ({ val }) => {
           mt: 4,
           cursor: "pointer",
           transition: "color 0.3s ease",
-          color: isHovered ? "#af1975" : "#000",
+          color: isHovered || isMobile ? "#af1975" : "#000",
           "&:hover": {
             color: "#af1975",
           },

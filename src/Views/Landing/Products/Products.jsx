@@ -22,9 +22,18 @@ const Products = () => {
           mt: -3,
         }}
       >
-        <Typography sx={{ width: "50vw", textAlign: "center" }}>
-          We deal in all kind of interioir, exterior, metallic paints. All type
-          of wooden polish material is also available.
+        <Typography
+          sx={{
+            width: {
+              xs: "80vw",
+              sm: "70vw",
+              md: "50vw",
+            },
+            textAlign: "center",
+          }}
+        >
+          We deal in all kinds of interior, exterior, and metallic paints. All
+          types of wooden polish material are also available.{" "}
           <strong>Quality is our first priority</strong>
         </Typography>
       </Box>

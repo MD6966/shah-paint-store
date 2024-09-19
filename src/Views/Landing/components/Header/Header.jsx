@@ -12,12 +12,13 @@ import {
 } from "@mui/material";
 import { AiFillProduct } from "react-icons/ai";
 import { IoIosColorPalette } from "react-icons/io";
-import { FaPaintRoller } from "react-icons/fa6";
-import { FaInfo, FaWhatsapp } from "react-icons/fa";
+import { FaPaintRoller, FaInfo, FaWhatsapp } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdCloseCircle } from "react-icons/io";
+import { CiSearch, CiShoppingCart } from "react-icons/ci";
 import { Link, useLocation } from "react-router-dom";
-const data = [
+
+const menuItems = [
   { id: 1, label: "Products", icon: <AiFillProduct size={20} />, to: "" },
   {
     id: 2,
@@ -29,33 +30,44 @@ const data = [
   { id: 4, label: "About Us", icon: <FaInfo size={20} />, to: "/about-us" },
 ];
 
+const StyledButton = styled(Button)(({ theme }) => ({
+  color: "#fff",
+  fontWeight: "bold",
+  letterSpacing: "2px",
+  textTransform: "none",
+  "&:hover": {
+    textDecoration: "underline",
+    textUnderlineOffset: "10px",
+    textDecorationColor: "#63262f",
+  },
+  [theme.breakpoints.between(900, 970)]: {
+    fontSize: "0.65rem",
+    marginRight: "0px",
+  },
+}));
+
 const Header = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const { pathname } = useLocation();
-  const StyledButton = styled(Button)({
-    color: "#fff",
-    fontWeight: "bold",
-    letterSpacing: "2px",
-    textTransform: "none",
-    "&:hover": {
-      textDecoration: "underline",
-      textUnderlineOffset: "10px",
-      textDecorationColor: "#63262f",
-    },
-  });
-
   const isMobile = useMediaQuery("(max-width: 900px)");
-  const isSmal = useMediaQuery("(max-width: 400px)");
+  const isSmall = useMediaQuery("(max-width: 400px)");
+  const isMd = useMediaQuery("(max-width: 500px)");
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setDrawerOpen(open);
-  };
+  const toggleDrawer = (open) => () => setDrawerOpen(open);
+
+  const renderMenuItems = () =>
+    menuItems.map(({ id, icon, label, to }) => (
+      <Box key={id} sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+        {icon}
+        <StyledButton
+          sx={{ textDecoration: pathname === to ? "underline" : "" }}
+          component={Link}
+          to={to}
+        >
+          {label}
+        </StyledButton>
+      </Box>
+    ));
 
   return (
     <AppBar
@@ -76,48 +88,12 @@ const Header = () => {
             alt="logo"
           />
         </Link>
-        <Box sx={{ ml: "auto", display: "flex" }}>
-          {!isMobile && (
-            <>
-              {data.map((val, ind) => (
-                <Box
-                  key={ind}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mr: 2,
-                    cursor: "pointer",
-                    "&:hover": {
-                      "& svg": {
-                        color: "#63262f",
-                      },
-                    },
-                  }}
-                >
-                  {val.icon}
-                  <StyledButton
-                    sx={{
-                      textDecoration: pathname === val.to ? "underline" : "",
-                      textUnderlineOffset: "10px",
-                      textDecorationColor: "#63262f",
-                    }}
-                    component={Link}
-                    to={val.to}
-                  >
-                    {val.label}
-                  </StyledButton>
-                </Box>
-              ))}
-            </>
-          )}
-
+        <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
+          {!isMobile && renderMenuItems()}
           {isMobile && (
             <>
               <IconButton onClick={toggleDrawer(true)}>
-                <GiHamburgerMenu
-                  style={{ marginTop: "3px", color: "white" }}
-                  size={30}
-                />
+                <GiHamburgerMenu style={{ color: "white" }} size={30} />
               </IconButton>
               <Drawer
                 anchor="top"
@@ -126,8 +102,6 @@ const Header = () => {
                 sx={{
                   "& .MuiDrawer-paper": {
                     backgroundColor: "rgba(0, 0, 0, 0.7)",
-                    display: "flex",
-                    flexDirection: "column",
                     padding: 2,
                     color: "#fff",
                   },
@@ -136,7 +110,6 @@ const Header = () => {
                 <Box
                   sx={{
                     display: "flex",
-                    alignItems: "center",
                     justifyContent: "space-between",
                     mb: 2,
                   }}
@@ -150,63 +123,51 @@ const Header = () => {
                     onClick={toggleDrawer(false)}
                     sx={{ color: "#fff" }}
                   >
-                    <IoMdCloseCircle size={30} />{" "}
+                    <IoMdCloseCircle size={30} />
                   </IconButton>
                 </Box>
                 <Divider sx={{ backgroundColor: "#fff", mb: 2 }} />
-                <Box
-                  role="presentation"
-                  onClick={toggleDrawer(false)}
-                  onKeyDown={toggleDrawer(false)}
-                >
-                  {data.map((val, ind) => (
-                    <Box
-                      key={ind}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mb: 2,
-                      }}
-                    >
-                      {val.icon}
-                      <StyledButton component={Link} to={val.to}>
-                        {val.label}
-                      </StyledButton>
-                    </Box>
-                  ))}
-
-                  {isSmal && (
-                    <Button
-                      variant="contained"
-                      startIcon={<FaWhatsapp />}
-                      sx={{
-                        textTransform: "none",
-                        background: "#fff",
-                        color: "#63262f",
-                        mt: 2,
-                      }}
-                    >
-                      Contact Us
-                    </Button>
-                  )}
-                </Box>
+                <Box onClick={toggleDrawer(false)}>{renderMenuItems()}</Box>
+                {isSmall && (
+                  <Button
+                    variant="contained"
+                    startIcon={<FaWhatsapp />}
+                    sx={{
+                      textTransform: "none",
+                      background: "#fff",
+                      color: "#63262f",
+                      mt: 2,
+                    }}
+                  >
+                    Contact Us
+                  </Button>
+                )}
               </Drawer>
             </>
           )}
-
-          {!isSmal && (
-            <Button
-              variant="contained"
-              startIcon={<FaWhatsapp />}
-              sx={{
-                textTransform: "none",
-                background: "#fff",
-                color: "#63262f",
-                ml: isMobile ? 2 : "",
-              }}
-            >
-              Contact Us
-            </Button>
+          {!isSmall && (
+            <>
+              <Button
+                variant="contained"
+                startIcon={<FaWhatsapp />}
+                sx={{
+                  textTransform: "none",
+                  background: "#fff",
+                  color: "#63262f",
+                }}
+              >
+                Contact Us
+              </Button>
+              {!isMd && (
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <CiSearch
+                    size={25}
+                    style={{ cursor: "pointer", margin: "0px 15px" }}
+                  />
+                  <CiShoppingCart size={25} style={{ cursor: "pointer" }} />
+                </Box>
+              )}
+            </>
           )}
         </Box>
       </Toolbar>

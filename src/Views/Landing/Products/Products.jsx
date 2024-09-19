@@ -2,6 +2,8 @@ import { Box, Grid2, Typography } from "@mui/material";
 import React from "react";
 import Heading from "../../../components/Text/Heading";
 import ProductCard from "./components/Product_Card";
+import ButtonComp from "../../../components/Button/ButtonComp";
+import { FaArrowRight } from "react-icons/fa";
 
 const Products = () => {
   const data = [
@@ -35,6 +37,9 @@ const Products = () => {
           );
         })}
       </Grid2>
+      <ButtonComp sx={{ mt: 5 }} endIcon={<FaArrowRight />}>
+        See All
+      </ButtonComp>
     </Box>
   );
 };
